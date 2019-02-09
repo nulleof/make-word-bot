@@ -20,6 +20,8 @@ defmodule Seeds do
   This module generates initial seed for game DB
   """
 
+  alias MakeWordBot.Word
+
   @doc """
   Init words table with vocabulary data with rules
   """
@@ -35,17 +37,14 @@ defmodule Seeds do
     |> Enum.map(&String.trim/1)
     |> Enum.map(&String.downcase(&1))
     |> Enum.filter(&Regex.match?(~r/^[а-я]+$/u, &1))
+    |> IO.inspect
+    |> Enum.map(&%{word: &1})
 
-    IO.inspect(words)
-
-    # now insert all words into the table
-    Enum.each(words, &insert_line/1)
-  end
-
-  alias MakeWordBot.Word
-
-  def insert_line(line) do
-    MakeWordBot.Repo.insert(%Word{word: line}, on_conflict: :nothing)
+    MakeWordBot.Repo.transaction fn ->
+      # there is postgresql limitation on insert amount by insert_all
+      Enum.chunk_every(words, 65535)
+      |> Enum.each(&MakeWordBot.Repo.insert_all(Word, &1, on_conflict: :nothing))
+    end
   end
 end
 
