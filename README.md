@@ -34,7 +34,8 @@ or
 ```
 $ openssl req -newkey rsa:2048 -sha256 -config config/v3.ext -nodes -keyout config/prod.key -x509 -days 365 -out config/prod.pem
 $ openssl x509 -outform der -in config/prod.pem -out config/prod.crt
-``` for production.
+```
+for production.
 
 Note, these files are outside of version control system.
 
