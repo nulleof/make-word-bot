@@ -16,3 +16,5 @@ config :make_word_bot, MakeWordBot.Repo,
   database: "make_word_bot_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+import_config "telegram.secret.exs"

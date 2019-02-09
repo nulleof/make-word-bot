@@ -11,9 +11,10 @@ defmodule MakeWordBot.Application do
       # Start the Ecto repository
       MakeWordBot.Repo,
       # Start the endpoint when the application starts
-      MakeWordBotWeb.Endpoint
+      MakeWordBotWeb.Endpoint,
       # Starts a worker by calling: MakeWordBot.Worker.start_link(arg)
       # {MakeWordBot.Worker, arg},
+      {MakeWordBot.InitWebhook, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
