@@ -13,6 +13,6 @@ defmodule MakeWordBotWeb.Router do
     token_uri = Application.fetch_env!(:make_word_bot, :telegram)[:token]
     |> Utils.token_to_url
 
-    post "/" <> token_uri, MakeWordBotWeb.GameController, :hook
+    post "/" <> token_uri, GameController, :hook
   end
 end

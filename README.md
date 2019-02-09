@@ -21,4 +21,11 @@ Or  change database config in `config/prod.sescret.exs` if you want run bot in p
 * Init database with `mix ecto.setup`. If you want use your own vocabulary, replace file
 `priv/repo/vocabulary.txt` with your own vocabulary (each word - one line). Migration ommits words with noncharacter symbols like ".", " "... and now is working only for Cyrylic vocabularies.
 
+* Init ssl certificates with
+`openssl req -newkey rsa:2048 -sha256 -nodes -keyout config/dev.key -x509 -days 365 -out config/dev.pem` for development
+
+or `openssl req -newkey rsa:2048 -sha256 -nodes -keyout config/prod.key -x509 -days 365 -out config/prod.pem` for production
+
+Note, these files are outside of version control system.
+
 * Run bot with `mix phx.server` for development environment

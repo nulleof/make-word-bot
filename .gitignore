@@ -34,3 +34,7 @@ make_word_bot-*.tar
 # secrets files as long as you replace their contents by environment
 # variables.
 /config/*.secret.exs
+
+# Don't commit *.key and *.pem files inside config directory, cause they are private sensitive
+/config/*.key
+/config/*.pem

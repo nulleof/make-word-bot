@@ -10,8 +10,13 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :make_word_bot, MakeWordBotWeb.Endpoint,
-  http: [:inet6, port: System.get_env("PORT") || 8443],
-  url: [host: "example.com", port: 80],
+  https: [
+    :inet6,
+    port: System.get_env("PORT") || 8443,
+    keyfile: __ENV__.file |> Path.dirname |> Path.join("prod.key"),
+    certfile:  __ENV__.file |> Path.dirname |> Path.join("prod.pem")
+  ],
+  url: [host: "212.20.53.139", port: 8443],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production

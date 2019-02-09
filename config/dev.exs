@@ -7,7 +7,11 @@ use Mix.Config
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
 config :make_word_bot, MakeWordBotWeb.Endpoint,
-  http: [port: 8443],
+  https: [
+    port: 8443,
+    keyfile: __ENV__.file |> Path.dirname |> Path.join("dev.key"),
+    certfile:  __ENV__.file |> Path.dirname |> Path.join("dev.pem")
+  ],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,

@@ -22,9 +22,26 @@ defmodule MakeWordBot.InitWebhook do
 
     IO.inspect "Application endpoint: " <> app_endpoint
 
-    body = %{
-      "url" => app_endpoint
-    } |> json_library.encode!()
+    cert_path = Application.fetch_env!(:make_word_bot, MakeWordBotWeb.Endpoint)[:https]
+    |> Keyword.fetch!(:certfile)
+
+    IO.inspect cert_path
+
+    body = {
+      :multipart,
+      [
+        {
+          :file,
+          cert_path,
+          {
+            "form-data",
+            [name: "certificate", filename: Path.basename(cert_path)]
+          },
+          []
+        },
+        {"url", app_endpoint}
+      ]
+    }
 
     headers = [{"Content-type", "application/json"}]
 
