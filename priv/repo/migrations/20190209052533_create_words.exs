@@ -6,5 +6,7 @@ defmodule MakeWordBot.Repo.Migrations.CreateWords do
       add :word, :string
     end
 
+    create unique_index(:words, [:word])
+
   end
 end

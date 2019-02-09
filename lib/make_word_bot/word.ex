@@ -12,5 +12,6 @@ defmodule MakeWordBot.Word do
     word
     |> cast(attrs, [:word])
     |> validate_required([:word])
+    |> unique_constraint(:word)
   end
 end
