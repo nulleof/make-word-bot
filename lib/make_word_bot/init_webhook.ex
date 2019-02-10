@@ -22,8 +22,7 @@ defmodule MakeWordBot.InitWebhook do
 
     IO.inspect "Application endpoint: " <> app_endpoint
 
-    cert_path = Application.fetch_env!(:make_word_bot, MakeWordBotWeb.Endpoint)[:https]
-    |> Keyword.fetch!(:certfile)
+    cert_path = "priv/keys/dev.pem"
 
     IO.inspect cert_path
 
@@ -56,7 +55,7 @@ defmodule MakeWordBot.InitWebhook do
             IO.inspect answer
         end
       other ->
-        IO.puts "Connot set webhook"
+        IO.puts "Cannot set webhook"
         IO.inspect other
     end
 

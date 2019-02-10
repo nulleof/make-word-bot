@@ -1,3 +1,7 @@
+# IDE JetBrainsz
+.idea
+*.iml
+
 # The directory Mix will write compiled artifacts to.
 /_build/
 
@@ -34,9 +38,3 @@ make_word_bot-*.tar
 # secrets files as long as you replace their contents by environment
 # variables.
 /config/*.secret.exs
-
-# Don't commit *.key, *.crt and *.pem files inside config directory, cause they are private sensitive
-/config/*.key
-/config/*.pem
-/config/*.crt
-/config/v3.ext

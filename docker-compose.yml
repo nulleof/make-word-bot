@@ -1,0 +1,33 @@
+version: '3'
+services:
+  web:
+    build: .
+    command: iex -S mix phx.server
+    container_name: make_word_bot
+    volumes:
+      - ./:/app
+    ports:
+      - "8443:8443"
+    links:
+      - db
+    depends_on:
+      - db
+  test:
+    build: .
+    command: mix test
+    environment:
+      MIX_ENV: test
+      PORT: 4000
+    volumes:
+      - ./:/app
+    links:
+      - db
+    depends_on:
+      - db
+  db:
+    image: postgres:latest
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: nulleof
+      POSTGRES_PASSWORD: b5XUHgAWnAn629hhza1XE687ccGQ61djudWq8N99Qj6VbfWCpsb4WCSU6336N27H

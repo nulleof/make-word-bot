@@ -9,8 +9,8 @@ use Mix.Config
 config :make_word_bot, MakeWordBotWeb.Endpoint,
   https: [
     port: 8443,
-    keyfile: __ENV__.file |> Path.dirname |> Path.join("dev.key"),
-    certfile:  __ENV__.file |> Path.dirname |> Path.join("dev.pem")
+    keyfile: "priv/keys/dev.key",
+    certfile:  "priv/keys/dev.pem"
   ],
   debug_errors: true,
   code_reloader: true,
@@ -51,12 +51,5 @@ config :phoenix, :stacktrace_depth, 20
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
 
-# Configure your database
-config :make_word_bot, MakeWordBot.Repo,
-  username: "postgres",
-  password: "postgres",
-  database: "make_word_bot_dev",
-  hostname: "localhost",
-  pool_size: 10
-
+import_config "dev.secret.exs"
 import_config "telegram.secret.exs"

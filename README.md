@@ -1,49 +1,88 @@
 # MakeWordBot
 
 This is game bot for telegram channels and dialogs.
-Bot will be written on elixir + phoenix framework as home pet project.
+Bot is written on Elixir + Phoenix as educational PET project.
 
-# Installation
+## Installation (for dev)
 
-* Install dependencies with `mix deps.get`
-* Create copy of secrets files and fill your values for them:
+Checkout this repository
 
+```bash
+git clone https://github.com/nulleof/make-word-bot.git
+cd make-word-bot
 ```
-$ cp config/telegram.example.exs config/telegram.secret.exs
-$ cp config/prod.example.exs config/prod.secret.ext
+
+Create config files from template, and change values to yours
+
+```bash
+cp config/config.example.exs config/dev.secret.exs
+cp config/config.example.exs config/prod.secret.exs
+cp config/config.example.exs config/test.secret.exs
+cp config/telegram.example.exs config/telegram.secret.exs
 ```
 
-These files will be outside of git repo, so will be sure you are stored them correctly.
-Change value of your telegram token in `config/telegram.secret.exs`.
-Also change database config in `config/dev.exs` if you want run bot in development environment.
-Or  change database config in `config/prod.sescret.exs` if you want run bot in production.
+Also edit your `docker-compose.yml` file by setting appropriate base username and password
 
-* `$ cp config/v3.example.ext config/v3.ext` and change fields to provide your certificate information
-
-* Init database with `mix ecto.setup`. If you want use your own vocabulary, replace file
-`priv/repo/vocabulary.txt` with your own vocabulary (each word - one line). Migration ommits words with noncharacter symbols like ".", " "... and now is working only for Cyrylic vocabularies.
-
-* Init ssl certificates with
+Init ssl certificates with
 ```
-$ openssl req -newkey rsa:2048 -sha256 -config config/v3.ext -nodes -keyout config/dev.key -x509 -days 365 -out config/dev.pem
-$ openssl x509 -outform der -in config/dev.pem -out config/dev.crt
+openssl req -newkey rsa:2048 -sha256 -nodes -keyout priv/keys/dev.key -x509 -days 365 -out priv/keys/dev.pem -subj "/C=US/ST=New York/L=Brooklyn/O=Example Brooklyn Company/CN=YOURDOMAIN.EXAMPLE"
 ```
-for development
 
-or
+### Install dependencies
+
+Install deps
+```bash
+docker-compose run web mix deps.get
 ```
-$ openssl req -newkey rsa:2048 -sha256 -config config/v3.ext -nodes -keyout config/prod.key -x509 -days 365 -out config/prod.pem
-$ openssl x509 -outform der -in config/prod.pem -out config/prod.crt
+
+Init ecto databases
+```bash
+docker-compose run web mix ecto.setup
+docker-compose run test mix ecto.setup
 ```
-for production.
 
-Note, these files are outside of version control system.
+After that your project folder contains `_build` and `deps` directories. Note if you use Docker not under root, you better to change it's ownership
+```bash
+sudo chown -R $USER:$USER .
+```
 
-Second command is for creating *.cer file which you can install as trusted root to allow access for local development
+NB: I think there will be other files in `_build` folder which owned by root after start app development.
 
-* Run bot with `mix phx.server` for development environment
+## Run
 
-# Notes
+Run container with, you must have installed `docker` and `docker-compose` (google it). If you run not under root user, it must be in `docker` usergroup (look here https://docs.docker.com/install/linux/linux-postinstall/)
+```bash
+docker-compose run web
+```
+
+Or create image and connect later (not tested)
+```bash
+docker-compose up -d web && docker attach make_word_bot
+```
+
+Or connect to bash of container (if you wasn't attachec)
+```bash
+docker exec -ti make_word_bot /bin/bash
+```
+
+Or see logs (not tested)
+```bash
+docker-compose logs
+```
+
+## Tests
+
+To perform all tests run
+```bash
+docker-compose run test
+```
+
+To perform one test run
+```bash
+docker-compose run test mix test test/make-word-bot/utils_test.exs
+```
+
+## Notes
 
 You can commit supervised InitWebhook in application.ex and set webhook path with curl command yourself:
 
