@@ -5,8 +5,6 @@ defmodule MakeWordBot.InitWebhook do
     Task.start_link(&run/0)
   end
 
-  alias MakeWordBot.Utils
-
   def run do
     json_library = Application.fetch_env!(:phoenix, :json_library)
     token = Application.fetch_env!(:make_word_bot, :telegram)[:token]
@@ -20,7 +18,7 @@ defmodule MakeWordBot.InitWebhook do
 
     app_endpoint =
       Application.fetch_env!(:make_word_bot, :telegram)[:webhook_server] <>
-        Utils.token_to_url(token)
+        MakeWordBot.token_to_url(token)
 
     IO.inspect("Application endpoint: " <> app_endpoint)
 

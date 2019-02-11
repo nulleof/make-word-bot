@@ -17,7 +17,7 @@ services:
     command: mix test
     environment:
       MIX_ENV: test
-      PORT: 4000
+      PORT: 4001
     volumes:
       - ./:/app
     links:
