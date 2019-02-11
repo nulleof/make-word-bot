@@ -2,7 +2,6 @@ defmodule MakeWordBot.Word do
   use Ecto.Schema
   import Ecto.Changeset
 
-
   schema "words" do
     field :word, :string
   end

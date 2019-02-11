@@ -27,25 +27,27 @@ defmodule Seeds do
   """
   def gen_words_from_file(filename) do
     # open file
-    filepath = __ENV__.file
-    |> Path.dirname
-    |> Path.join(filename)
+    filepath =
+      __ENV__.file
+      |> Path.dirname()
+      |> Path.join(filename)
 
-    IO.puts "Opening vocabulary on path " <> filepath
+    IO.puts("Opening vocabulary on path " <> filepath)
 
-    words = File.stream!(filepath)
-    |> Enum.map(&String.trim/1)
-    |> Enum.map(&String.downcase(&1))
-    |> Enum.filter(&Regex.match?(~r/^[а-я]+$/u, &1))
-    |> IO.inspect
-    |> Enum.map(&%{word: &1})
+    words =
+      File.stream!(filepath)
+      |> Enum.map(&String.trim/1)
+      |> Enum.map(&String.downcase(&1))
+      |> Enum.filter(&Regex.match?(~r/^[а-я]+$/u, &1))
+      |> IO.inspect()
+      |> Enum.map(&%{word: &1})
 
-    MakeWordBot.Repo.transaction fn ->
+    MakeWordBot.Repo.transaction(fn ->
       # there is postgresql limitation on insert amount by insert_all
       Enum.chunk_every(words, 65535)
       |> Enum.each(&MakeWordBot.Repo.insert_all(Word, &1, on_conflict: :nothing))
-    end
+    end)
   end
 end
 
-Seeds.gen_words_from_file "vocabulary.txt"
+Seeds.gen_words_from_file("vocabulary.txt")

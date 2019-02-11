@@ -13,8 +13,8 @@ config :make_word_bot, MakeWordBotWeb.Endpoint,
   https: [
     :inet6,
     port: System.get_env("PORT") || 8443,
-    keyfile: __ENV__.file |> Path.dirname |> Path.join("prod.key"),
-    certfile:  __ENV__.file |> Path.dirname |> Path.join("prod.pem")
+    keyfile: __ENV__.file |> Path.dirname() |> Path.join("prod.key"),
+    certfile: __ENV__.file |> Path.dirname() |> Path.join("prod.pem")
   ],
   url: [host: "212.20.53.139", port: 8443],
   cache_static_manifest: "priv/static/cache_manifest.json"

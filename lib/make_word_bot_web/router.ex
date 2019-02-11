@@ -10,8 +10,9 @@ defmodule MakeWordBotWeb.Router do
   scope "/api", MakeWordBotWeb do
     pipe_through :api
 
-    token_uri = Application.fetch_env!(:make_word_bot, :telegram)[:token]
-    |> Utils.token_to_url
+    token_uri =
+      Application.fetch_env!(:make_word_bot, :telegram)[:token]
+      |> Utils.token_to_url()
 
     post "/" <> token_uri, GameController, :hook
   end

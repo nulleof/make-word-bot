@@ -10,7 +10,7 @@ config :make_word_bot, MakeWordBotWeb.Endpoint,
   https: [
     port: 8443,
     keyfile: "priv/keys/dev.key",
-    certfile:  "priv/keys/dev.pem"
+    certfile: "priv/keys/dev.pem"
   ],
   debug_errors: true,
   code_reloader: true,

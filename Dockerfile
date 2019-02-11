@@ -7,9 +7,3 @@ RUN mix archive.install hex phx_new 1.4.0 --force
 RUN curl -sL https://deb.nodesource.com/setup_11.x | bash - && apt-get install -y nodejs
 
 WORKDIR /app
-
-# Next commands aren't working for a while
-#CMD mix deps.get
-#
-#CMD MIX_ENV=dev mix ecto.setup
-#CMD MIX_ENV=test mix ecto.setup

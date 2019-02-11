@@ -7,6 +7,5 @@ defmodule MakeWordBot.Repo.Migrations.CreateWords do
     end
 
     create unique_index(:words, [:word])
-
   end
 end
