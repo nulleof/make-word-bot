@@ -30,5 +30,6 @@ services:
     ports:
       - '5432:5432'
     environment:
+      ### Oooops, I've commited my database password =) TODO: let's think how to remove this later to env script
       POSTGRES_USER: nulleof
       POSTGRES_PASSWORD: b5XUHgAWnAn629hhza1XE687ccGQ61djudWq8N99Qj6VbfWCpsb4WCSU6336N27H

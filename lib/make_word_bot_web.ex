@@ -23,7 +23,6 @@ defmodule MakeWordBotWeb do
 
       import Plug.Conn
       import MakeWordBotWeb.Gettext
-      alias MakeWordBotWeb.Router.Helpers, as: Routes
     end
   end
 

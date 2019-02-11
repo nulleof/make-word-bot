@@ -12,9 +12,9 @@ defmodule MakeWordBot.InitWebhook do
     IO.inspect("Telegram bot token: " <> token)
 
     tgm_endpoint =
-      Application.fetch_env!(:make_word_bot, :telegram_api)[:endpoint] <>
+      Application.fetch_env!(:make_word_bot, :telegram)[:endpoint] <>
         token <>
-        Application.fetch_env!(:make_word_bot, :telegram_api)[:set_webhook]
+        Application.fetch_env!(:make_word_bot, :telegram)[:set_webhook]
 
     app_endpoint =
       Application.fetch_env!(:make_word_bot, :telegram)[:webhook_server] <>

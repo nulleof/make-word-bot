@@ -10,13 +10,6 @@ use Mix.Config
 config :make_word_bot,
   ecto_repos: [MakeWordBot.Repo]
 
-# Configures the endpoint
-config :make_word_bot, MakeWordBotWeb.Endpoint,
-  url: [host: "localhost"],
-  secret_key_base: "K09+FTTwEAxOokT/1E01dzjPDM7W97JTm/y7tf02zoder8fiV/sNmG3OzGw7H3+N",
-  render_errors: [view: MakeWordBotWeb.ErrorView, accepts: ~w(json)],
-  pubsub: [name: MakeWordBot.PubSub, adapter: Phoenix.PubSub.PG2]
-
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
@@ -26,9 +19,13 @@ config :logger, :console,
 config :phoenix, :json_library, Jason
 
 # Telegram endpoint configs
-config :make_word_bot, :telegram_api,
+config :make_word_bot, :telegram,
   endpoint: "https://api.telegram.org/bot",
-  set_webhook: "/setWebhook"
+  set_webhook: "/setWebhook",
+  token: "AAAAAAAAA:CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+  webhook_server: "https://my.address.example.com:8443/api/"
+
+import_config "telegram.secret.exs"
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

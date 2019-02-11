@@ -10,5 +10,3 @@ config :logger, level: :warn
 import_config "test.secret.exs"
 
 config :make_word_bot, MakeWordBot.Repo, pool: Ecto.Adapters.SQL.Sandbox
-
-import_config "telegram.secret.exs"
