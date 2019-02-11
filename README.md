@@ -50,17 +50,17 @@ NB: I think there will be other files in `_build` folder which owned by root aft
 
 ## Run
 
-Run container with, you must have installed `docker` and `docker-compose` (google it). If you run not under root user, it must be in `docker` usergroup (look here https://docs.docker.com/install/linux/linux-postinstall/)
+Run attached container `web`
 ```bash
-docker-compose run web
+docker-compose up web
 ```
 
-Or create image and connect later (not tested)
+Or run detached container
 ```bash
-docker-compose up -d web && docker attach make_word_bot
+docker-compose up -d web
 ```
 
-Or connect to bash of container (if you wasn't attachec)
+Connect to bash of container
 ```bash
 docker exec -ti make_word_bot /bin/bash
 ```
