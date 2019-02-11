@@ -19,4 +19,19 @@ defmodule MakeWordBot do
   def token_to_url(token) do
     Regex.replace(~r/:/, token, "/")
   end
+
+  def json_library do
+    Application.fetch_env!(:phoenix, :json_library)
+  end
+
+  @doc """
+  Wrapper for json library you define in config.exs
+
+  ## Example
+    iex> MakeWordBot.to_json(%{})
+    "{}"
+  """
+  def to_json(data) do
+    data |> json_library().encode!
+  end
 end

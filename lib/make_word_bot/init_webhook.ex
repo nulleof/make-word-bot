@@ -5,11 +5,11 @@ defmodule MakeWordBot.InitWebhook do
     Task.start_link(&run/0)
   end
 
+  require Logger
+
   def run do
     json_library = Application.fetch_env!(:phoenix, :json_library)
     token = Application.fetch_env!(:make_word_bot, :telegram)[:token]
-
-    IO.inspect("Telegram bot token: " <> token)
 
     tgm_endpoint =
       Application.fetch_env!(:make_word_bot, :telegram)[:endpoint] <>
@@ -20,11 +20,10 @@ defmodule MakeWordBot.InitWebhook do
       Application.fetch_env!(:make_word_bot, :telegram)[:webhook_server] <>
         MakeWordBot.token_to_url(token)
 
-    IO.inspect("Application endpoint: " <> app_endpoint)
+    Logger.info("Telegram token: " <> token)
+    Logger.info("Application endpoint: " <> app_endpoint)
 
     cert_path = "priv/keys/dev.pem"
-
-    IO.inspect(cert_path)
 
     body = {
       :multipart,
@@ -50,16 +49,16 @@ defmodule MakeWordBot.InitWebhook do
 
         case answer do
           {:ok, %{"ok" => true, "result" => true}} ->
-            IO.puts("Webhook was successfully set to " <> app_endpoint)
+            Logger.info "Webhook was successfully set to " <> app_endpoint
 
           _ ->
-            IO.puts("Telegram api answered wrong, endpoint can not work")
-            IO.inspect(answer)
+            Logger.warn "Telegram api error answer, endpoint can not work"
+            Logger.debug answer
         end
 
       other ->
-        IO.puts("Cannot set webhook")
-        IO.inspect(other)
+        Logger.warn "Cannot set webhook"
+        Logger.debug other
     end
   end
 end

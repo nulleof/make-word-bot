@@ -1,7 +1,11 @@
 defmodule MakeWordBotWeb.GameController do
   use MakeWordBotWeb, :controller
 
-  def hook(conn, params) do
-    json(conn, params)
+  require Logger
+
+  def hook(conn, _params) do
+    Logger.info("Here I am!")
+
+    json(conn, MakeWordBot.to_json(%{}))
   end
 end
