@@ -21,9 +21,10 @@ config :phoenix, :json_library, Jason
 # Telegram endpoint configs
 config :make_word_bot, :telegram,
   endpoint: "https://api.telegram.org/bot",
-  set_webhook: "/setWebhook",
+  set_webhook: "setWebhook",
   token: "AAAAAAAAA:CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
-  webhook_server: "https://my.address.example.com:8443/api/"
+  server: "https://my.address.example.com",
+  api_path: "api"
 
 import_config "telegram.secret.exs"
 

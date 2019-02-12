@@ -8,6 +8,7 @@ use Mix.Config
 # with webpack to recompile .js and .css sources.
 config :make_word_bot, MakeWordBotWeb.Endpoint,
   https: [
+    # NB: telegram only accepts 80, 88, 8080 and 8443 ports!!!
     port: 8443,
     keyfile: "priv/keys/dev.key",
     certfile: "priv/keys/dev.pem"

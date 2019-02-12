@@ -1,8 +1,13 @@
 use Mix.Config
 
-# We don't run a server during test. If one is required,
-# you can enable the server option below.
-config :make_word_bot, MakeWordBotWeb.Endpoint, server: false
+# I run server during tests, why not?
+config :make_word_bot, MakeWordBotWeb.Endpoint,
+  https: [
+    # NB: telegram only accepts 80, 88, 8080 and 8443 ports!!!
+    port: 8443, # I don't use here 4001 port
+    keyfile: "priv/keys/dev.key",
+    certfile: "priv/keys/dev.pem"
+  ]
 
 # Print only warnings and errors during test
 config :logger, level: :warn

@@ -44,16 +44,16 @@ defmodule MakeWordBot.InitWebhook do
 
         case answer do
           {:ok, %{"ok" => true, "result" => true}} ->
-            Logger.info "Webhook was successfully set to " <> app_endpoint
+            Logger.info("Webhook was successfully set to " <> app_endpoint)
 
           other ->
-            Logger.warn "Telegram api error answer, endpoint can not work"
-            Logger.debug "Answer received: #{inspect other}"
+            Logger.warn("Telegram api error answer, endpoint can not work")
+            Logger.debug("Answer received: #{inspect(other)}")
         end
 
       other ->
-        Logger.warn "Bad response"
-        Logger.debug "Answer received: #{inspect other}"
+        Logger.warn("Bad response")
+        Logger.debug("Answer received: #{inspect(other)}")
     end
   end
 end

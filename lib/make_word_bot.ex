@@ -60,13 +60,13 @@ defmodule MakeWordBot do
   Returns formed my webhook uri
   """
   def telegram_set_webhook_uri do
-    telegram_endpoint() <>
-    Application.fetch_env!(:make_word_bot, :telegram)[:set_webhook]
+    [telegram_endpoint(), Application.fetch_env!(:make_word_bot, :telegram)[:set_webhook]]
+    |> Enum.join("/")
   end
-  
+
   def app_server do
     [Application.fetch_env!(:make_word_bot, :telegram)[:server], app_port()]
-    |> Enum.join ":"
+    |> Enum.join(":")
   end
 
   @doc """
@@ -78,7 +78,7 @@ defmodule MakeWordBot do
       Application.fetch_env!(:make_word_bot, :telegram)[:api_path],
       telegram_token_uri()
     ]
-    |> Enum.join "/"
+    |> Enum.join("/")
   end
 
   @doc """
@@ -88,5 +88,4 @@ defmodule MakeWordBot do
     Application.fetch_env!(:make_word_bot, MakeWordBotWeb.Endpoint)[:https]
     |> Keyword.fetch!(:certfile)
   end
-
 end
