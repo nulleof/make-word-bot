@@ -1,4 +1,7 @@
 defmodule MakeWordBot.InitWebhook do
+  @moduledoc """
+  This task sends request to telegram
+  """
   use Task, restart: :transient
 
   def start_link(_arg) do
@@ -8,22 +11,14 @@ defmodule MakeWordBot.InitWebhook do
   require Logger
 
   def run do
-    json_library = Application.fetch_env!(:phoenix, :json_library)
-    token = Application.fetch_env!(:make_word_bot, :telegram)[:token]
-
-    tgm_endpoint =
-      Application.fetch_env!(:make_word_bot, :telegram)[:endpoint] <>
-        token <>
-        Application.fetch_env!(:make_word_bot, :telegram)[:set_webhook]
-
-    app_endpoint =
-      Application.fetch_env!(:make_word_bot, :telegram)[:webhook_server] <>
-        MakeWordBot.token_to_url(token)
+    json_library = MakeWordBot.json_library()
+    token = MakeWordBot.telegram_token()
+    tgm_endpoint = MakeWordBot.telegram_set_webhook_uri()
+    app_endpoint = MakeWordBot.app_webhook_uri()
+    cert_path = MakeWordBot.certfile_path()
 
     Logger.info("Telegram token: " <> token)
     Logger.info("Application endpoint: " <> app_endpoint)
-
-    cert_path = "priv/keys/dev.pem"
 
     body = {
       :multipart,
@@ -51,14 +46,14 @@ defmodule MakeWordBot.InitWebhook do
           {:ok, %{"ok" => true, "result" => true}} ->
             Logger.info "Webhook was successfully set to " <> app_endpoint
 
-          _ ->
+          other ->
             Logger.warn "Telegram api error answer, endpoint can not work"
-            Logger.debug answer
+            Logger.debug "Answer received: #{inspect other}"
         end
 
       other ->
-        Logger.warn "Cannot set webhook"
-        Logger.debug other
+        Logger.warn "Bad response"
+        Logger.debug "Answer received: #{inspect other}"
     end
   end
 end

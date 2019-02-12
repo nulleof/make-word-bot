@@ -55,6 +55,11 @@ Run attached container `web`
 docker-compose up web
 ```
 
+Or (without through out ports)
+```bash
+docker-compose run web iex -S mix phx.server
+```
+
 Or run detached container
 ```bash
 docker-compose up -d web
