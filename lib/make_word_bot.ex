@@ -88,4 +88,11 @@ defmodule MakeWordBot do
     Application.fetch_env!(:make_word_bot, MakeWordBotWeb.Endpoint)[:https]
     |> Keyword.fetch!(:certfile)
   end
+
+  @doc """
+  Starts async task on task supervisor
+  """
+  def start_async work do
+    Task.Supervisor.async_nolink(MakeWordBot.TaskSupervisor, work)
+  end
 end

@@ -14,7 +14,9 @@ defmodule MakeWordBot.Application do
       MakeWordBotWeb.Endpoint,
       # Starts a worker by calling: MakeWordBot.Worker.start_link(arg)
       # {MakeWordBot.Worker, arg},
-      {MakeWordBot.InitWebhook, []}
+      MakeWordBot.InitWebhookWorker,
+      # Start task supervisor
+      {Task.Supervisor, name: MakeWordBot.TaskSupervisor}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -1,4 +1,4 @@
-defmodule MakeWordBot.InitWebhook do
+defmodule MakeWordBot.InitWebhookWorker do
   @moduledoc """
   This task sends request to telegram
   """
