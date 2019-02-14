@@ -22,6 +22,7 @@ config :phoenix, :json_library, Jason
 config :make_word_bot, :telegram,
   endpoint: "https://api.telegram.org/bot",
   set_webhook: "setWebhook",
+  send_message: "sendMessage",
   token: "AAAAAAAAA:CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
   server: "https://my.address.example.com",
   api_path: "api"

@@ -72,7 +72,7 @@ defmodule MakeWordBotWeb.GameController do
   def hook(conn, message) do
     Logger.info("Here I am!")
 
-    MakeWordBot.start_async(fn -> MakeWordBot.ProcessMessage.run(message) end)
+    MakeWordBot.start_async(fn -> MakeWordBot.ProcessMessage.start(message) end)
     
     json(conn, MakeWordBot.to_json(%{}))
   end

@@ -36,9 +36,7 @@ defmodule MakeWordBot.InitWebhookWorker do
       ]
     }
 
-    headers = [{"Content-type", "application/json"}]
-
-    case HTTPoison.post(tgm_endpoint, body, headers, []) do
+    case HTTPoison.post(tgm_endpoint, body, MakeWordBot.headers()) do
       {:ok, response} ->
         answer = json_library.decode(response.body)
 

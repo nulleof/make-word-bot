@@ -64,6 +64,14 @@ defmodule MakeWordBot do
     |> Enum.join("/")
   end
 
+  @doc """
+  Returns formed my webhook uri
+  """
+  def telegram_send_message_uri do
+    [telegram_endpoint(), Application.fetch_env!(:make_word_bot, :telegram)[:send_message]]
+    |> Enum.join("/")
+  end
+
   def app_server do
     [Application.fetch_env!(:make_word_bot, :telegram)[:server], app_port()]
     |> Enum.join(":")
@@ -94,5 +102,12 @@ defmodule MakeWordBot do
   """
   def start_async work do
     Task.Supervisor.async_nolink(MakeWordBot.TaskSupervisor, work)
+  end
+  
+  @doc """
+  Returns HTTPoison json headers
+  """
+  def headers do
+    [{"Content-type", "application/json"}]
   end
 end
