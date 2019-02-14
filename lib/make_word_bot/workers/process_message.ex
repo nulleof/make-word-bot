@@ -9,7 +9,8 @@ defmodule MakeWordBot.ProcessMessage do
     IO.inspect(payload)
     
     message = payload["message"]
-    message_id = message["id"]
+    message_id = message["message_id"]
+    text = message["text"]
     chat = message["chat"]
     from = message["from"]
     
@@ -19,14 +20,24 @@ defmodule MakeWordBot.ProcessMessage do
     
     # send answer and check result
     
-    send_message(chat_id, "C'mon, bro", message_id)
+    case text do
+      # TODO: remove text constants from here (I'm about name)
+      n when n in ["/help", "/help@make_a_word_bot"] ->
+        send_message(chat_id, "Dis is a help, bro")
+      n when n in ["/start", "/start@make_a_word_bot"] ->
+         send_message(chat_id, "Start it, bro")
+      n when n in ["/score", "/score@make_a_word_bot"] ->
+        send_message(chat_id, "Yeah, dis is game score")
+      _ -> send_message(chat_id, "C'mon, bro", message_id)
+    end
+    
   end
   
-  def send_message(chat_id, text, reply_id) do
+  def send_message(chat_id, text, reply_id \\ nil) do
     message = %{
       "chat_id" => chat_id,
       "text" => text,
-      "reply_to_message_id" => reply_id,
+      "reply_to_message" => reply_id,
       "disable_notifications" => true,
     } |> MakeWordBot.to_json()
 
