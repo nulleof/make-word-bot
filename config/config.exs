@@ -25,7 +25,8 @@ config :make_word_bot, :telegram,
   send_message: "sendMessage",
   token: "AAAAAAAAA:CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
   server: "https://my.address.example.com",
-  api_path: "api"
+  api_path: "api",
+  skip_message_older: 60
 
 import_config "telegram.secret.exs"
 

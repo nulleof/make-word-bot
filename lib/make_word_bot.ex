@@ -100,7 +100,7 @@ defmodule MakeWordBot do
   @doc """
   Starts async task on task supervisor
   """
-  def start_async work do
+  def start_async(work) do
     Task.Supervisor.async_nolink(MakeWordBot.TaskSupervisor, work)
   end
   
@@ -109,5 +109,12 @@ defmodule MakeWordBot do
   """
   def headers do
     [{"Content-type", "application/json"}]
+  end
+  
+  @doc"""
+  Returns time limit for old messages
+  """
+  def skip_message_older do
+    Application.fetch_env!(:make_word_bot, :telegram)[:skip_message_older]
   end
 end
