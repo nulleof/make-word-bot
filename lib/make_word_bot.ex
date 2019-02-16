@@ -117,4 +117,18 @@ defmodule MakeWordBot do
   def skip_message_older do
     Application.fetch_env!(:make_word_bot, :telegram)[:skip_message_older]
   end
+  
+  def get_current_game(chat_id) do
+    Task.Supervisor.children(MakeWordBot.GameSupervisor)
+    |> IO.inspect
+    |> Keyword.get(chat_id)
+  end
+  
+  def create_new_game(chat_id) do
+    Task.Supervisor.async_nolink(MakeWordBot.GameSupervisor, MakeWordBot.ProcessGame.start_link(chat_id), name: chat_id)
+  end
+  
+  def game_length do
+    Application.fetch_env!(:make_word_bot, :game_length)
+  end
 end

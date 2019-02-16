@@ -64,19 +64,49 @@ defmodule MakeWordBot.ProcessMessage do
   end
   
   def process_start_message(chat_id) do
-  
+    # first check if there is such game process
+    game = MakeWordBot.get_current_game(chat_id)
+    # If no, create new one
+    cond do
+      game == nil ->
+        Logger.debug("Creating new game")
+        # create new one
+        _new_game = MakeWordBot.create_new_game(chat_id)
+        
+      true -> # do nothing
+        Logger.debug("Trying to create already existing game")
+        :ok
+    end
+    # And send a message to chat about started game
   end
   
   def process_score_message(chat_id) do
-
+    game = MakeWordBot.get_current_game(chat_id)
+    send(game, {:score})
   end
 
   def process_word_message(chat_id) do
-
+    game = MakeWordBot.get_current_game(chat_id)
+    send(game, {:get_word})
   end
   
   def process_simple_message(chat_id, message_id, text, from) do
-  
+    # first check game exists
+    game = MakeWordBot.get_current_game(chat_id)
+    
+    # can I do simple send(game, {:ping})?
+    send(game, {:answer, message_id, text, from})
+    
+    # if exists, try to answer anything for a while
+    # And
+    # later it will calculate game logic
+#    cond do
+#      game == nil ->
+#        :ok
+#
+#      true ->
+#        send(game, {:ping})
+#    end
   end
   
   def process_message(message) do
@@ -101,7 +131,7 @@ defmodule MakeWordBot.ProcessMessage do
   
        Regex.match?(~r[^/score@make_a_word_bot], text)
        || (chat_type == "private" && Regex.match?(~r[^/score], text)) ->
-         process_start_message(chat_id)
+         process_score_message(chat_id)
   
        Regex.match?(~r[^/word@make_a_word_bot], text)
        || (chat_type == "private" && Regex.match?(~r[^/word], text)) ->
@@ -113,8 +143,8 @@ defmodule MakeWordBot.ProcessMessage do
   end
   
   def start(payload) do
-    Logger.debug("message in the worker!!!!")
-    IO.inspect(payload)
+    # Logger.debug("message in the worker!!!!")
+    # IO.inspect(payload)
     
     message = payload["message"]
     message_id = message["message_id"]
