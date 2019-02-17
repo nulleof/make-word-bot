@@ -148,6 +148,7 @@ defmodule MakeWordBot.ProcessMessage do
       "text" => text,
       "reply_to_message_id" => reply_id,
       "disable_notifications" => true,
+      "parse_mode" => "Markdown",
     } |> MakeWordBot.to_json()
 
     tgm_endpoint = MakeWordBot.telegram_send_message_uri()

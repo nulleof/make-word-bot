@@ -49,7 +49,7 @@ defmodule MakeWordBot.ProcessGame do
     # search here new word
     word = gen_main_word()
     
-    message = "Начата новая игра! Слово игры **#{String.upcase(word)}** "
+    message = "Начата новая игра! Слово игры *#{String.upcase(word)}* "
     send_message(chat_id, message)
   
     # start main game loop
@@ -80,13 +80,13 @@ defmodule MakeWordBot.ProcessGame do
         
       {:get_word} ->
         Logger.debug("Request current word")
-        message = "Текущее слово **#{String.upcase(state.word)}**"
+        message = "Текущее слово *#{String.upcase(state.word)}*"
         send_message(state.chat_id, message)
         game_loop(state)
         
       {:score} ->
         Logger.debug("Requested current score")
-        message = "Текущий счет **#{state.score}**"
+        message = "Текущий счет *#{state.score}*"
         send_message(state.chat_id, message)
         game_loop(state)
     end
