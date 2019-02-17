@@ -1,10 +1,22 @@
 defmodule MakeWordBot.ProcessGame do
   require Logger
 
+  alias MakeWordBot.Repo
+  
   def send_message(chat_id, message, message_reply_id \\ nil) do
     MakeWordBot.start_async(fn ->
       MakeWordBot.ProcessMessage.send_message(chat_id, message, message_reply_id)
     end)
+  end
+  
+  import Ecto.Query
+  
+  def gen_main_word() do
+    word = Repo.all(from w in MakeWordBot.Word)
+      |> Enum.filter(fn word -> String.length(word.word) >= MakeWordBot.min_word_size() end)
+      |> Enum.random()
+    
+    word.word
   end
 
   def start_link(chat_id) do
@@ -12,9 +24,10 @@ defmodule MakeWordBot.ProcessGame do
     Logger.debug("New game started with pid: #{inspect self()}")
     Process.send_after(self(), {:end_game}, MakeWordBot.game_length())
   
-    # TODO: search here new word
-    word = "выхухоль"
-    message = "Начата новая игра! Слово игры **#{String.capitalize(word)}** "
+    # search here new word
+    word = gen_main_word()
+    
+    message = "Начата новая игра! Слово игры **#{String.upcase(word)}** "
     send_message(chat_id, message)
   
     # start main game loop
@@ -41,7 +54,7 @@ defmodule MakeWordBot.ProcessGame do
         
       {:get_word} ->
         Logger.debug("Request current word")
-        message = "Текущее слово **#{String.capitalize(state.word)}**"
+        message = "Текущее слово **#{String.upcase(state.word)}**"
         send_message(state.chat_id, message)
         game_loop(state)
         

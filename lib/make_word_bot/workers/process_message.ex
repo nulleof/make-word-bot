@@ -79,14 +79,24 @@ defmodule MakeWordBot.ProcessMessage do
     end
   end
   
+  def send_to_game(game, message) do
+    case game do
+      nil ->
+        Logger.debug("Skip message on nil game")
+        :ok
+      pid ->
+        send(pid, message)
+    end
+  end
+  
   def process_score_message(chat_id) do
     game = MakeWordBot.get_current_game(chat_id)
-    send(game, {:score})
+    send_to_game(game, {:score})
   end
 
   def process_word_message(chat_id) do
     game = MakeWordBot.get_current_game(chat_id)
-    send(game, {:get_word})
+    send_to_game(game, {:get_word})
   end
   
   def process_simple_message(chat_id, message_id, text, from) do
@@ -94,7 +104,7 @@ defmodule MakeWordBot.ProcessMessage do
     game = MakeWordBot.get_current_game(chat_id)
     
     # can I do simple send(game, {:ping})?
-    send(game, {:answer, message_id, text, from})
+    send_to_game(game, {:answer, message_id, text, from})
   end
   
   def process_message(message) do

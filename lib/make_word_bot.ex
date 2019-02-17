@@ -129,4 +129,8 @@ defmodule MakeWordBot do
   def game_length do
     Application.fetch_env!(:make_word_bot, :game_length)
   end
+  
+  def min_word_size do
+    Application.fetch_env!(:make_word_bot, :min_word_size)
+  end
 end
