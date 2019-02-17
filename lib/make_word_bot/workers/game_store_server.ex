@@ -21,6 +21,19 @@ defmodule MakeWordBot.GameStoreServer do
         nil
     end
   end
+  
+  def stop_game(chat_id) do
+    game = get_game(chat_id)
+    
+    case game do
+      nil ->
+        Logger.debug("Trying to stop not existed game")
+        :ok
+        
+      pid ->
+        send(pid, :end_game)
+    end
+  end
 
   def remove_game(chat_id) do
     GenServer.cast(__MODULE__, {:remove, chat_id})

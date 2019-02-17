@@ -53,6 +53,7 @@ defmodule MakeWordBot.ProcessMessage do
     В этой игре тебе нужно составить из главного слова как можно больше слов поменьше, чтобы товарищи кусали локти от зависти, какой ты эрудированный!
     
     /start - чтобы начать игру в вашем чате. Игра длится 2 минуты
+    /stop - чтобы остановить игру раньше времени
     /score - чтобы показать счет в текущей игре
     /word - чтобы показать главное слово в текущей игре
     /help - чтобы показать эту подсказку еще раз
@@ -79,7 +80,8 @@ defmodule MakeWordBot.ProcessMessage do
     end
   end
   
-  def send_to_game(game, message) do
+  def send_to_game(chat_id, message) do
+    game = MakeWordBot.get_current_game(chat_id)
     case game do
       nil ->
         Logger.debug("Skip message on nil game")
@@ -90,13 +92,15 @@ defmodule MakeWordBot.ProcessMessage do
   end
   
   def process_score_message(chat_id) do
-    game = MakeWordBot.get_current_game(chat_id)
-    send_to_game(game, {:score})
+    send_to_game(chat_id, {:score})
   end
 
   def process_word_message(chat_id) do
-    game = MakeWordBot.get_current_game(chat_id)
-    send_to_game(game, {:get_word})
+    send_to_game(chat_id, {:get_word})
+  end
+  
+  def process_stop_message(chat_id) do
+    send_to_game(chat_id, {:end_game})
   end
   
   def process_simple_message(chat_id, message_id, text, from) do
@@ -134,6 +138,10 @@ defmodule MakeWordBot.ProcessMessage do
        Regex.match?(~r[^/word@make_a_word_bot], text)
        || (chat_type == "private" && Regex.match?(~r[^/word], text)) ->
          process_word_message(chat_id)
+         
+       Regex.match?(~r[^/stop@make_a_word_bot], text)
+       || (chat_type == "private" && Regex.match?(~r[^/stop], text)) ->
+         process_stop_message(chat_id)
          
        true ->
          process_simple_message(chat_id, message_id, text, from)

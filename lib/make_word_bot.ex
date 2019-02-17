@@ -126,6 +126,10 @@ defmodule MakeWordBot do
     MakeWordBot.GameStoreServer.start_game(chat_id)
   end
   
+  def stop_game(chat_id) do
+    MakeWordBot.GameStoreServer.stop_game(chat_id)
+  end
+  
   def game_length do
     Application.fetch_env!(:make_word_bot, :game_length)
   end
