@@ -8,6 +8,28 @@ defmodule MakeWordBot.ProcessGame do
       MakeWordBot.ProcessMessage.send_message(chat_id, message, message_reply_id)
     end)
   end
+
+  def is_joke_time(word) do
+    Regex.match?(~r/иста$/ui, word)
+    || Regex.match?(~r/ет$/ui, word)
+  end
+
+  def send_joke_message(chat_id, initial_message, message_id) do
+    answer = cond do
+      Regex.match?(~r/иста$/ui, initial_message) -> "Отсоси у тракториста"
+      Regex.match?(~r/ет$/ui, initial_message) -> "Пидора ответ"
+    end
+  
+    send_message(chat_id, answer, message_id)
+  end
+  
+  def perform_joke(chat_id, text, message_id) do
+    cond do
+      is_joke_time(text) -> send_joke_message(chat_id, text, message_id)
+      
+      true -> :not_a_joke
+    end
+  end
   
   import Ecto.Query
   
@@ -48,6 +70,10 @@ defmodule MakeWordBot.ProcessGame do
         
       {:answer, message_id, text, _from} ->
         Logger.debug("PONG!")
+        
+        # send a joke first
+        perform_joke(state.chat_id, text, message_id)
+        
         message = "О, вариант ответа #{text}"
         send_message(state.chat_id, message, message_id)
         game_loop(state)

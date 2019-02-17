@@ -24,27 +24,6 @@ defmodule MakeWordBot.ProcessMessage do
   
     diff > MakeWordBot.skip_message_older()
   end
-
-  def is_joke_time(word) do
-    Regex.match?(~r/иста$/ui, word)
-      || Regex.match?(~r/ет$/ui, word)
-  end
-
-  def send_joke_message(chat_id, initial_message, message_id) do
-    answer = cond do
-      Regex.match?(~r/иста$/ui, initial_message) -> "Отсоси у тракториста"
-      Regex.match?(~r/ет$/ui, initial_message) -> "Пидора ответ"
-    end
-
-    send_message(chat_id, answer, message_id)
-  end
-
-  def generate_and_send_message(chat_id, initial_message, message_id, _from) do
-    cond do
-      is_joke_time(initial_message) -> send_joke_message(chat_id, initial_message, message_id)
-      initial_message -> send_message(chat_id, "Тут будет какая-то игровая логика. Курва!", message_id)
-    end
-  end
   
   def process_help_message(chat_id) do
     message = """
@@ -104,11 +83,7 @@ defmodule MakeWordBot.ProcessMessage do
   end
   
   def process_simple_message(chat_id, message_id, text, from) do
-    # first check game exists
-    game = MakeWordBot.get_current_game(chat_id)
-    
-    # can I do simple send(game, {:ping})?
-    send_to_game(game, {:answer, message_id, text, from})
+    send_to_game(chat_id, {:answer, message_id, text, from})
   end
   
   def process_message(message) do
