@@ -9,7 +9,8 @@ defmodule MakeWordBot.ProcessGame do
 
   def start_link(chat_id) do
     # start linked (or not? It doesn't matter at all) timer here
-    Process.send_after(self(), :end_game, MakeWordBot.game_length())
+    Logger.debug("New game started with pid: #{inspect self()}")
+    Process.send_after(self(), {:end_game}, MakeWordBot.game_length())
   
     # TODO: search here new word
     word = "выхухоль"
@@ -46,7 +47,7 @@ defmodule MakeWordBot.ProcessGame do
         
       {:score} ->
         Logger.debug("Requested current score")
-        message = "Текущий счет **#{state.word}**"
+        message = "Текущий счет **#{state.score}**"
         send_message(state.chat_id, message)
         game_loop(state)
     end

@@ -9,7 +9,7 @@ use Mix.Config
 
 config :make_word_bot,
   ecto_repos: [MakeWordBot.Repo],
-  game_length:  120 * 1000
+  game_length:  60 * 1000
 
 # Configures Elixir's Logger
 config :logger, :console,

@@ -77,7 +77,6 @@ defmodule MakeWordBot.ProcessMessage do
         Logger.debug("Trying to create already existing game")
         :ok
     end
-    # And send a message to chat about started game
   end
   
   def process_score_message(chat_id) do
@@ -96,17 +95,6 @@ defmodule MakeWordBot.ProcessMessage do
     
     # can I do simple send(game, {:ping})?
     send(game, {:answer, message_id, text, from})
-    
-    # if exists, try to answer anything for a while
-    # And
-    # later it will calculate game logic
-#    cond do
-#      game == nil ->
-#        :ok
-#
-#      true ->
-#        send(game, {:ping})
-#    end
   end
   
   def process_message(message) do

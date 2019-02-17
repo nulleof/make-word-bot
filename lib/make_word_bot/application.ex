@@ -17,8 +17,8 @@ defmodule MakeWordBot.Application do
       MakeWordBot.InitWebhookWorker,
       # Start task supervisor
       {Task.Supervisor, name: MakeWordBot.TaskSupervisor},
-      # Start current games supervisor
-      {Task.Supervisor, name: MakeWordBot.GameSupervisor},
+      # Start current games supervisor (written by myself)
+      MakeWordBot.GameStoreServer,
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

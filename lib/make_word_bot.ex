@@ -119,13 +119,11 @@ defmodule MakeWordBot do
   end
   
   def get_current_game(chat_id) do
-    Task.Supervisor.children(MakeWordBot.GameSupervisor)
-    |> IO.inspect
-    |> Keyword.get(chat_id)
+    MakeWordBot.GameStoreServer.get_game(chat_id)
   end
   
   def create_new_game(chat_id) do
-    Task.Supervisor.async_nolink(MakeWordBot.GameSupervisor, MakeWordBot.ProcessGame.start_link(chat_id), name: chat_id)
+    MakeWordBot.GameStoreServer.start_game(chat_id)
   end
   
   def game_length do
