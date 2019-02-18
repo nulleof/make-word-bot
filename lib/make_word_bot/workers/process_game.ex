@@ -101,27 +101,33 @@ defmodule MakeWordBot.ProcessGame do
         state
         
       nil ->
-        if (word_consist_of?(game_word, answer_prepared) && word_exists_in_db?(answer_prepared)) do
-          # add to list of known entries
-          answers = Map.put(state.answers, answer_prepared, true)
+        cond do
+          game_word == answer_prepared ->
+            message = "Молодец! Возьми с полки пирожок, +0. *#{String.upcase(state.word)}*"
+            send_message(state.chat_id, message, message_id)
+            state
           
-          user_name = "#{from["first_name"]} #{from["last_name"]}"
-          user_id = from["id"]
-          
-          # update score for user
-          score_for_word = MakeWordBot.WordScore.score(answer_prepared)
-          score = update_score(state.score, user_name, user_id, score_for_word)
-          
-          state = Map.put(state, :score, score)
-          state = Map.put(state, :answers, answers)
-          
-          # send hooray message
-          message = "+#{score_for_word} #{user_name}. *#{String.upcase(state.word)}*"
-          send_message(state.chat_id, message, message_id)
-          
-          state
-        else
-          state
+          word_consist_of?(game_word, answer_prepared) && word_exists_in_db?(answer_prepared) ->
+            # add to list of known entries
+            answers = Map.put(state.answers, answer_prepared, true)
+            
+            user_name = "#{from["first_name"]} #{from["last_name"]}"
+            user_id = from["id"]
+            
+            # update score for user
+            score_for_word = MakeWordBot.WordScore.score(answer_prepared)
+            score = update_score(state.score, user_name, user_id, score_for_word)
+            
+            state = Map.put(state, :score, score)
+            state = Map.put(state, :answers, answers)
+            
+            # send hooray message
+            message = "+#{score_for_word} #{user_name}. *#{String.upcase(state.word)}*"
+            send_message(state.chat_id, message, message_id)
+            state
+            
+          true ->
+            state
         end
       
       _ -> state
