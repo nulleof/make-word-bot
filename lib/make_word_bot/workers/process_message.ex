@@ -95,27 +95,26 @@ defmodule MakeWordBot.ProcessMessage do
      # detect where is this message from
      # I really need only ID, no matter is it type "private" or "group"
      chat_id = chat["id"]
-     chat_type = chat["type"]
      
      cond do
        Regex.match?(~r[^/help@make_a_word_bot], text)
-       || (chat_type == "private" && Regex.match?(~r[^/help], text)) ->
+       || Regex.match?(~r[^/help], text) ->
          process_help_message(chat_id)
        
        Regex.match?(~r[^/start@make_a_word_bot], text)
-       || (chat_type == "private" && Regex.match?(~r[^/start], text)) ->
+       || Regex.match?(~r[^/start], text) ->
          process_start_message(chat_id)
   
        Regex.match?(~r[^/score@make_a_word_bot], text)
-       || (chat_type == "private" && Regex.match?(~r[^/score], text)) ->
+       || Regex.match?(~r[^/score], text) ->
          process_score_message(chat_id)
   
        Regex.match?(~r[^/word@make_a_word_bot], text)
-       || (chat_type == "private" && Regex.match?(~r[^/word], text)) ->
+       || Regex.match?(~r[^/word], text) ->
          process_word_message(chat_id)
          
        Regex.match?(~r[^/stop@make_a_word_bot], text)
-       || (chat_type == "private" && Regex.match?(~r[^/stop], text)) ->
+       || Regex.match?(~r[^/stop], text) ->
          process_stop_message(chat_id)
          
        true ->
