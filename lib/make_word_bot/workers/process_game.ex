@@ -40,6 +40,16 @@ defmodule MakeWordBot.ProcessGame do
     
     word.word
   end
+  
+  def word_exists_in_db(word) do
+    query = from w in MakeWordBot.Word,
+      where: w.word == ^word
+    
+    count_entries = Repo.all(query)
+    |> Enum.count()
+    
+    count_entries > 0
+  end
 
   def start_link(chat_id) do
     # start linked (or not? It doesn't matter at all) timer here
@@ -56,8 +66,44 @@ defmodule MakeWordBot.ProcessGame do
     game_loop(%{
       chat_id: chat_id,
       word: word,
-      score: 0,
+      answers: %{},
+      score: %{},
     })
+  end
+  
+  def process_answer(message_id, answer, from, state) do
+    answer_prepared = answer
+      |> String.downcase()
+      |> String.trim()
+    
+    case Map.get(state.answers, answer_prepared) do
+      true ->
+        # do nothing, word was already answered
+        state
+        
+      nil ->
+        if (word_exists_in_db(answer_prepared)) do
+          # add to list of known entries
+          answers = Map.put(state.answers, answer_prepared, true)
+          IO.inspect(answers)
+          IO.inspect(state)
+          state = Map.put(state, :answers, answers)
+          
+          IO.inspect(state)
+          
+          # give points, later
+          
+          # send hooray message
+          message = "Есть такое слово! 10 очков гриффиндору!"
+          send_message(state.chat_id, message, message_id)
+          
+          state
+        else
+          state
+        end
+      
+      _ -> state
+    end
   end
   
   def game_loop(state) do
@@ -68,14 +114,14 @@ defmodule MakeWordBot.ProcessGame do
         message = "Игра закончена!"
         send_message(state.chat_id, message)
         
-      {:answer, message_id, text, _from} ->
+      {:answer, message_id, text, from} ->
         Logger.debug("PONG!")
         
         # send a joke first
         perform_joke(state.chat_id, text, message_id)
         
-        message = "О, вариант ответа #{text}"
-        send_message(state.chat_id, message, message_id)
+        state = process_answer(message_id, text, from, state)
+        
         game_loop(state)
         
       {:get_word} ->
