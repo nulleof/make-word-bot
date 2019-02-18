@@ -71,6 +71,21 @@ defmodule MakeWordBot.ProcessGame do
     })
   end
   
+  def update_score(score, user_name, user_id, amount) do
+    user_score = Map.get(score, user_id)
+    
+    if (user_score == nil) do
+      Map.put(score, user_id, %{
+        score: amount,
+        name: user_name,
+      })
+    else
+      old_score = user_score.score
+      user_score = Map.put(user_score, :score, old_score + amount)
+      Map.put(score, user_id, user_score)
+    end
+  end
+  
   import MakeWordBot.WordChecker, only: [word_consist_of?: 2]
   
   def process_answer(message_id, answer, from, state) do
@@ -89,16 +104,19 @@ defmodule MakeWordBot.ProcessGame do
         if (word_consist_of?(game_word, answer_prepared) && word_exists_in_db?(answer_prepared)) do
           # add to list of known entries
           answers = Map.put(state.answers, answer_prepared, true)
-          IO.inspect(answers)
-          IO.inspect(state)
+          
+          user_name = "#{from["first_name"]} #{from["last_name"]}"
+          user_id = from["id"]
+          
+          # update score for user
+          score_for_word = MakeWordBot.WordScore.score(answer_prepared)
+          score = update_score(state.score, user_name, user_id, score_for_word)
+          
+          state = Map.put(state, :score, score)
           state = Map.put(state, :answers, answers)
           
-          IO.inspect(state)
-          
-          # give points, later
-          
           # send hooray message
-          message = "Есть такое слово! 10 очков гриффиндору!"
+          message = "+#{score_for_word} #{user_name}. *#{String.upcase(state.word)}*"
           send_message(state.chat_id, message, message_id)
           
           state
@@ -110,12 +128,20 @@ defmodule MakeWordBot.ProcessGame do
     end
   end
   
+  def score_message(chat_id, score) do
+    message = "Счет:\n"
+    
+    Enum.reduce(score, message, fn ({k, v}, acc) ->
+      acc <> "#{v.score} | #{v.name}\n"
+    end)
+  end
+  
   def game_loop(state) do
     receive do
       {:end_game} ->
         # kills itself, tell about results
         Logger.info("Game was finished")
-        message = "Игра закончена!"
+        message = "*Игра закончена!*\n" <> score_message(state.chat_id, state.score)
         send_message(state.chat_id, message)
         
       {:answer, message_id, text, from} ->
@@ -136,7 +162,7 @@ defmodule MakeWordBot.ProcessGame do
         
       {:score} ->
         Logger.debug("Requested current score")
-        message = "Текущий счет *#{state.score}*"
+        message = score_message(state.chat_id, state.score)
         send_message(state.chat_id, message)
         game_loop(state)
     end
