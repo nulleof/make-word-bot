@@ -40,8 +40,8 @@ defmodule MakeWordBot.ProcessGame do
     
     word.word
   end
-  
-  def word_exists_in_db(word) do
+
+  def word_exists_in_db?(word) do
     query = from w in MakeWordBot.Word,
       where: w.word == ^word
     
@@ -71,10 +71,14 @@ defmodule MakeWordBot.ProcessGame do
     })
   end
   
+  import MakeWordBot.WordChecker, only: [word_consist_of?: 2]
+  
   def process_answer(message_id, answer, from, state) do
     answer_prepared = answer
       |> String.downcase()
       |> String.trim()
+    
+    game_word = state.word
     
     case Map.get(state.answers, answer_prepared) do
       true ->
@@ -82,7 +86,7 @@ defmodule MakeWordBot.ProcessGame do
         state
         
       nil ->
-        if (word_exists_in_db(answer_prepared)) do
+        if (word_consist_of?(game_word, answer_prepared) && word_exists_in_db?(answer_prepared)) do
           # add to list of known entries
           answers = Map.put(state.answers, answer_prepared, true)
           IO.inspect(answers)
